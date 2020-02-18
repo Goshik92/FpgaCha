@@ -1,0 +1,20 @@
+### Platform designer ###
+
+# Exclude everything
+/**
+
+# Include directories
+# (without this we cannot whitelist files)
+!/**/
+
+# Include files with diagrams
+!/**/*.qsys
+
+# Include file with ip path
+!/**/user_components.ipx
+
+# Backup files are garbage files
+/**/*.BAK.qsys
+
+# Include gitignore
+!.gitignore
