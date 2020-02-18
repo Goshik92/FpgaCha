@@ -1,0 +1,22 @@
+### Quartus ###
+
+# Exclude everything.
+# Eclipse project files will be completely excluded,
+# because they can be easily recreated.
+/**
+
+# Include directories
+# (without this we cannot whitelist files)
+!/**/
+
+# Include source files
+!/*/*.sv
+!/*/*.v
+!/*/*.vhd
+
+# Include project files
+!/*/*.qsf
+!/*/*.qpf
+
+# Include gitignore
+!.gitignore
