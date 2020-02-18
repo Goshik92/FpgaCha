@@ -1,0 +1,19 @@
+### Qsys ip core ###
+
+# Exclude everything
+/**
+
+# Include directories
+# (without this we cannot whitelist files)
+!/**/
+
+# Include files with modules
+!/**/*hw.tcl
+
+# Include source files
+!/**/*.sv
+!/**/*.v
+!/**/*.vhd
+
+# Include gitignore
+!.gitignore
