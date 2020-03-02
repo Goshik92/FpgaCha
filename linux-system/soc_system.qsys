@@ -9,27 +9,6 @@
    categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
-   element ChaCha20
-   {
-      datum _sortIndex
-      {
-         value = "6";
-         type = "int";
-      }
-   }
-   element ChaCha20.csr
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "0";
-         type = "String";
-      }
-   }
    element clk_0
    {
       datum _sortIndex
@@ -41,6 +20,38 @@
       {
          value = "1";
          type = "boolean";
+      }
+   }
+   element fpgacha_0
+   {
+      datum _sortIndex
+      {
+         value = "6";
+         type = "int";
+      }
+   }
+   element fpgacha_0.csr
+   {
+      datum baseAddress
+      {
+         value = "1024";
+         type = "String";
+      }
+   }
+   element fpgacha_1
+   {
+      datum _sortIndex
+      {
+         value = "7";
+         type = "int";
+      }
+   }
+   element fpgacha_1.csr
+   {
+      datum baseAddress
+      {
+         value = "0";
+         type = "String";
       }
    }
    element hps_0
@@ -57,6 +68,14 @@
       }
    }
    element hps_0.f2h_axi_slave
+   {
+      datum baseAddress
+      {
+         value = "0";
+         type = "String";
+      }
+   }
+   element hps_0.f2h_sdram0_data
    {
       datum baseAddress
       {
@@ -114,14 +133,6 @@
       {
          value = "1";
          type = "boolean";
-      }
-   }
-   element sc_fifo_0
-   {
-      datum _sortIndex
-      {
-         value = "7";
-         type = "int";
       }
    }
    element soc_system
@@ -212,12 +223,51 @@
  <interface name="hps_0_hps_io" internal="hps_0.hps_io" type="conduit" dir="end" />
  <interface name="memory" internal="hps_0.memory" type="conduit" dir="end" />
  <interface name="reset" internal="clk_0.clk_in_reset" type="reset" dir="end" />
- <module name="ChaCha20" kind="ChaCha20" version="1.0" enabled="1" />
  <module name="clk_0" kind="clock_source" version="18.1" enabled="1">
   <parameter name="clockFrequency" value="50000000" />
   <parameter name="clockFrequencyKnown" value="true" />
   <parameter name="inputClockFrequency" value="0" />
   <parameter name="resetSynchronousEdges" value="NONE" />
+ </module>
+ <module name="fpgacha_0" kind="fpgacha" version="1.0" enabled="1">
+  <parameter name="AUTO_CHACHA20_CLOCK_CLOCK_DOMAIN" value="-1" />
+  <parameter name="AUTO_CHACHA20_CLOCK_CLOCK_RATE" value="-1" />
+  <parameter name="AUTO_CHACHA20_CLOCK_RESET_DOMAIN" value="-1" />
+  <parameter name="AUTO_CLK_CLOCK_DOMAIN" value="-1" />
+  <parameter name="AUTO_CLK_CLOCK_RATE" value="-1" />
+  <parameter name="AUTO_CLK_RESET_DOMAIN" value="-1" />
+  <parameter name="AUTO_CLOCK_CLOCK_DOMAIN" value="3" />
+  <parameter name="AUTO_CLOCK_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_CLOCK_RESET_DOMAIN" value="3" />
+  <parameter name="AUTO_DEVICE" value="5CSEMA5F31C6" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="6" />
+  <parameter name="AUTO_GENERATION_ID" value="0" />
+  <parameter name="AUTO_MASTER_ADDRESS_MAP"><![CDATA[<address-map><slave name='hps_0_bridges.f2h_sdram0_data' start='0x0' end='0x100000000' /></address-map>]]></parameter>
+  <parameter name="AUTO_MASTER_ADDRESS_WIDTH" value="AddressWidth = 32" />
+  <parameter name="AUTO_SC_FIFO_0_CLK_CLOCK_DOMAIN" value="-1" />
+  <parameter name="AUTO_SC_FIFO_0_CLK_CLOCK_RATE" value="-1" />
+  <parameter name="AUTO_SC_FIFO_0_CLK_RESET_DOMAIN" value="-1" />
+  <parameter name="AUTO_STREAM_TO_MEMORY_0_CLOCK_CLOCK_DOMAIN" value="-1" />
+  <parameter name="AUTO_STREAM_TO_MEMORY_0_CLOCK_CLOCK_RATE" value="-1" />
+  <parameter name="AUTO_STREAM_TO_MEMORY_0_CLOCK_RESET_DOMAIN" value="-1" />
+  <parameter name="AUTO_STREAM_TO_MEMORY_0_MASTER_ADDRESS_MAP" value="" />
+  <parameter
+     name="AUTO_STREAM_TO_MEMORY_0_MASTER_ADDRESS_WIDTH"
+     value="AddressWidth = -1" />
+  <parameter name="AUTO_UNIQUE_ID">soc_system_fpgacha_0</parameter>
+ </module>
+ <module name="fpgacha_1" kind="fpgacha" version="1.0" enabled="1">
+  <parameter name="AUTO_CLOCK_CLOCK_DOMAIN" value="3" />
+  <parameter name="AUTO_CLOCK_CLOCK_RATE" value="50000000" />
+  <parameter name="AUTO_CLOCK_RESET_DOMAIN" value="3" />
+  <parameter name="AUTO_DEVICE" value="5CSEMA5F31C6" />
+  <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
+  <parameter name="AUTO_DEVICE_SPEEDGRADE" value="6" />
+  <parameter name="AUTO_GENERATION_ID" value="0" />
+  <parameter name="AUTO_MASTER_ADDRESS_MAP"><![CDATA[<address-map><slave name='hps_0_bridges.f2h_sdram0_data' start='0x0' end='0x100000000' /></address-map>]]></parameter>
+  <parameter name="AUTO_MASTER_ADDRESS_WIDTH" value="AddressWidth = 32" />
+  <parameter name="AUTO_UNIQUE_ID">soc_system_fpgacha_1</parameter>
  </module>
  <module name="hps_0" kind="altera_hps" version="18.1" enabled="1">
   <parameter name="ABSTRACT_REAL_COMPARE_TEST" value="false" />
@@ -316,7 +366,7 @@
   <parameter name="EXPORT_AFI_HALF_CLK" value="false" />
   <parameter name="EXTRA_SETTINGS" value="" />
   <parameter name="F2H_AXI_CLOCK_FREQ" value="50000000" />
-  <parameter name="F2H_SDRAM0_CLOCK_FREQ" value="100" />
+  <parameter name="F2H_SDRAM0_CLOCK_FREQ" value="50000000" />
   <parameter name="F2H_SDRAM1_CLOCK_FREQ" value="100" />
   <parameter name="F2H_SDRAM2_CLOCK_FREQ" value="100" />
   <parameter name="F2H_SDRAM3_CLOCK_FREQ" value="100" />
@@ -329,8 +379,8 @@
   <parameter name="F2SCLK_SDRAMCLK_Enable" value="false" />
   <parameter name="F2SCLK_SDRAMCLK_FREQ" value="0" />
   <parameter name="F2SCLK_WARMRST_Enable" value="false" />
-  <parameter name="F2SDRAM_Type" value="" />
-  <parameter name="F2SDRAM_Width" value="" />
+  <parameter name="F2SDRAM_Type">Avalon-MM Write-Only</parameter>
+  <parameter name="F2SDRAM_Width" value="256" />
   <parameter name="F2SINTERRUPT_Enable" value="true" />
   <parameter name="F2S_Width" value="3" />
   <parameter name="FIX_READ_LATENCY" value="8" />
@@ -986,26 +1036,6 @@
   <parameter name="USE_PLI" value="0" />
  </module>
  <module
-   name="sc_fifo_0"
-   kind="altera_avalon_sc_fifo"
-   version="18.1"
-   enabled="1">
-  <parameter name="BITS_PER_SYMBOL" value="512" />
-  <parameter name="CHANNEL_WIDTH" value="0" />
-  <parameter name="EMPTY_LATENCY" value="3" />
-  <parameter name="ENABLE_EXPLICIT_MAXCHANNEL" value="false" />
-  <parameter name="ERROR_WIDTH" value="0" />
-  <parameter name="EXPLICIT_MAXCHANNEL" value="0" />
-  <parameter name="FIFO_DEPTH" value="16" />
-  <parameter name="SYMBOLS_PER_BEAT" value="1" />
-  <parameter name="USE_ALMOST_EMPTY_IF" value="0" />
-  <parameter name="USE_ALMOST_FULL_IF" value="0" />
-  <parameter name="USE_FILL_LEVEL" value="0" />
-  <parameter name="USE_MEMORY_BLOCKS" value="1" />
-  <parameter name="USE_PACKETS" value="0" />
-  <parameter name="USE_STORE_FORWARD" value="0" />
- </module>
- <module
    name="sysid_qsys"
    kind="altera_avalon_sysid_qsys"
    version="18.1"
@@ -1034,7 +1064,16 @@
    kind="avalon"
    version="18.1"
    start="hps_0.h2f_lw_axi_master"
-   end="ChaCha20.csr">
+   end="fpgacha_0.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0400" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
+   start="hps_0.h2f_lw_axi_master"
+   end="fpgacha_1.csr">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
@@ -1049,10 +1088,23 @@
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
-   kind="avalon_streaming"
+   kind="avalon"
    version="18.1"
-   start="ChaCha20.st"
-   end="sc_fifo_0.in" />
+   start="fpgacha_0.master"
+   end="hps_0.f2h_sdram0_data">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
+   kind="avalon"
+   version="18.1"
+   start="fpgacha_1.master"
+   end="hps_0.f2h_sdram0_data">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
  <connection kind="clock" version="18.1" start="clk_0.clk" end="main_pll.refclk" />
  <connection
    kind="clock"
@@ -1073,17 +1125,22 @@
    kind="clock"
    version="18.1"
    start="main_pll.outclk0"
-   end="sc_fifo_0.clk" />
+   end="fpgacha_0.clock" />
  <connection
    kind="clock"
    version="18.1"
    start="main_pll.outclk0"
-   end="ChaCha20.clock" />
+   end="fpgacha_1.clock" />
  <connection
    kind="clock"
    version="18.1"
    start="main_pll.outclk0"
    end="hps_0.f2h_axi_clock" />
+ <connection
+   kind="clock"
+   version="18.1"
+   start="main_pll.outclk0"
+   end="hps_0.f2h_sdram0_clock" />
  <connection
    kind="clock"
    version="18.1"
@@ -1102,15 +1159,24 @@
   <parameter name="irqNumber" value="0" />
  </connection>
  <connection
-   kind="reset"
+   kind="interrupt"
    version="18.1"
-   start="clk_0.clk_reset"
-   end="master_secure.clk_reset" />
+   start="hps_0.f2h_irq0"
+   end="fpgacha_0.irq">
+  <parameter name="irqNumber" value="1" />
+ </connection>
+ <connection
+   kind="interrupt"
+   version="18.1"
+   start="hps_0.f2h_irq0"
+   end="fpgacha_1.irq">
+  <parameter name="irqNumber" value="2" />
+ </connection>
  <connection
    kind="reset"
    version="18.1"
    start="clk_0.clk_reset"
-   end="sc_fifo_0.clk_reset" />
+   end="master_secure.clk_reset" />
  <connection
    kind="reset"
    version="18.1"
@@ -1130,7 +1196,12 @@
    kind="reset"
    version="18.1"
    start="clk_0.clk_reset"
-   end="ChaCha20.reset" />
+   end="fpgacha_0.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clk_0.clk_reset"
+   end="fpgacha_1.reset" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.maxAdditionalLatency" value="1" />
 </system>
