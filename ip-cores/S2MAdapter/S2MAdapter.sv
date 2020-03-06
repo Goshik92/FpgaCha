@@ -1,6 +1,6 @@
 typedef logic [1:0] CsrAddr_t;
 
-module StreamToMemory(
+module S2MAdapter(
     input logic clock,
     input logic reset,
     
