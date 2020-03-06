@@ -1,0 +1,20 @@
+### Quartus ###
+
+# Exclude everything.
+/**
+
+# Include directories
+# (without this we cannot whitelist files)
+!/**/
+
+# Include source files
+!/*.sv
+!/*.v
+!/*.vhd
+
+# Include project files
+!/*.qsf
+!/*.qpf
+
+# Include gitignore
+!.gitignore
