@@ -32,6 +32,15 @@ set_module_property ALLOW_GREYBOX_GENERATION false
 set_module_property REPORT_HIERARCHY false
 
 
+#
+# Device tree generation
+#
+set_module_assignment embeddedsw.dts.vendor "goshik92"
+set_module_assignment embeddedsw.dts.name "chacha20"
+set_module_assignment embeddedsw.dts.group "chacha20"
+set_module_assignment embeddedsw.dts.compatible "uio-pdrv-genirq"
+
+
 # 
 # file sets
 # 
