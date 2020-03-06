@@ -8,8 +8,8 @@
 *     Using Avalon-MM interface
 ***********************************************/
 
-const logic [4:0] ROUND_COUNT = 5'd20;
-const int BCOUNT_IDX = 12;
+localparam logic [4:0] ROUND_COUNT = 5'd20;
+localparam StateIdx_t BCOUNT_IDX = StateIdx_t'(12);
 
 // Data structures used in the module
 typedef logic [31:0] Word_t;
@@ -160,7 +160,7 @@ module ChaCha20(
                 
                 // If CONTROL register is written, first computation
                 6'b100000: begin
-                    padCounter <= csr_writedata;
+                    padCounter <= csr_writedata[4:0];
                     FirstRound();
                 end
             endcase
