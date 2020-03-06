@@ -1,0 +1,20 @@
+### Device tree ###
+
+# Exclude everything.
+# Eclipse project files will be completely excluded,
+# because they can be easily recreated.
+/**
+
+# Include directories
+# (without this we cannot whitelist files)
+!/**/
+
+# Include XML files
+# They are needed for additional config
+!/**/*.xml
+
+# Include scripts
+!/**/*.sh
+
+# Include gitignore
+!.gitignore
