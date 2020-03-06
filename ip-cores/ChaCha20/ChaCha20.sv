@@ -73,8 +73,10 @@ module ChaCha20(
     
     // Avalon-MM slave interface for configuring the module
     input logic csr_write,
+    input logic csr_read,
     input logic [5:0] csr_address,
     input logic [31:0] csr_writedata,
+    output logic [31:0] csr_readdata,
     
     // Avalon-ST source interface for outputting the data
     output logic [511:0] st_data,
@@ -93,6 +95,9 @@ module ChaCha20(
     
     // not actually a register and is used in a MUX
     State_t roundSrc, roundResult;
+    
+    // Assign random constant to probe the module 
+    assign csr_readdata = 32'hfb7e03d9; 
     
     // Choose source for a round (init state or current state)
     assign roundSrc = roundCounter == 1'b0 ? initState : state;
@@ -180,6 +185,4 @@ module ChaCha20(
             end
         end
     end
-    
-    
 endmodule
