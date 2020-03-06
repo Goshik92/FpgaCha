@@ -6,7 +6,7 @@
    version="1.0"
    description=""
    tags=""
-   categories="" />
+   categories="System" />
  <parameter name="bonusData"><![CDATA[bonusData 
 {
    element chacha20
@@ -49,12 +49,20 @@
          type = "int";
       }
    }
-   element s2m_dma
+   element s2m_adapter
    {
       datum _sortIndex
       {
          value = "4";
          type = "int";
+      }
+   }
+   element s2m_adapter.csr
+   {
+      datum baseAddress
+      {
+         value = "256";
+         type = "String";
       }
    }
    element s2m_dma.csr
@@ -88,8 +96,8 @@
  <instanceScript></instanceScript>
  <interface name="clock" internal="clock_source.clk_in" type="clock" dir="end" />
  <interface name="csr" internal="mm_bridge.s0" type="avalon" dir="end" />
- <interface name="irq" internal="s2m_dma.irq" type="interrupt" dir="end" />
- <interface name="master" internal="s2m_dma.master" type="avalon" dir="start" />
+ <interface name="irq" internal="s2m_adapter.irq" type="interrupt" dir="end" />
+ <interface name="master" internal="s2m_adapter.master" type="avalon" dir="start" />
  <interface
    name="reset"
    internal="clock_source.clk_in_reset"
@@ -136,22 +144,26 @@
   <parameter name="USE_AUTO_ADDRESS_WIDTH" value="0" />
   <parameter name="USE_RESPONSE" value="0" />
  </module>
- <module name="s2m_dma" kind="stream_to_memory" version="1.0" enabled="1" />
- <connection kind="avalon" version="18.1" start="mm_bridge.m0" end="s2m_dma.csr">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0100" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
+ <module name="s2m_adapter" kind="s2m_adapter" version="1.0" enabled="1" />
  <connection kind="avalon" version="18.1" start="mm_bridge.m0" end="chacha20.csr">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
+   kind="avalon"
+   version="18.1"
+   start="mm_bridge.m0"
+   end="s2m_adapter.csr">
+  <parameter name="arbitrationPriority" value="1" />
+  <parameter name="baseAddress" value="0x0100" />
+  <parameter name="defaultConnection" value="false" />
+ </connection>
+ <connection
    kind="avalon_streaming"
    version="18.1"
    start="fifo.out"
-   end="s2m_dma.snk" />
+   end="s2m_adapter.snk" />
  <connection
    kind="avalon_streaming"
    version="18.1"
@@ -167,22 +179,17 @@
    kind="clock"
    version="18.1"
    start="clock_source.clk"
-   end="s2m_dma.clock" />
+   end="chacha20.clock" />
  <connection
    kind="clock"
    version="18.1"
    start="clock_source.clk"
-   end="chacha20.clock" />
+   end="s2m_adapter.clock" />
  <connection
    kind="reset"
    version="18.1"
    start="clock_source.clk_reset"
    end="fifo.clk_reset" />
- <connection
-   kind="reset"
-   version="18.1"
-   start="clock_source.clk_reset"
-   end="s2m_dma.reset" />
  <connection
    kind="reset"
    version="18.1"
@@ -193,6 +200,11 @@
    version="18.1"
    start="clock_source.clk_reset"
    end="mm_bridge.reset" />
+ <connection
+   kind="reset"
+   version="18.1"
+   start="clock_source.clk_reset"
+   end="s2m_adapter.reset" />
  <interconnectRequirement for="$system" name="qsys_mm.clockCrossingAdapter" value="HANDSHAKE" />
  <interconnectRequirement for="$system" name="qsys_mm.enableEccProtection" value="FALSE" />
  <interconnectRequirement for="$system" name="qsys_mm.insertDefaultSlave" value="FALSE" />

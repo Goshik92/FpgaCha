@@ -167,6 +167,14 @@
          type = "String";
       }
    }
+   element soc_system
+   {
+      datum _originalDeviceFamily
+      {
+         value = "Cyclone V";
+         type = "String";
+      }
+   }
    element sysid_qsys
    {
       datum _sortIndex
@@ -230,44 +238,28 @@
   <parameter name="resetSynchronousEdges" value="NONE" />
  </module>
  <module name="fpgacha_0" kind="fpgacha" version="1.0" enabled="1">
-  <parameter name="AUTO_CHACHA20_CLOCK_CLOCK_DOMAIN" value="-1" />
-  <parameter name="AUTO_CHACHA20_CLOCK_CLOCK_RATE" value="-1" />
-  <parameter name="AUTO_CHACHA20_CLOCK_RESET_DOMAIN" value="-1" />
-  <parameter name="AUTO_CLK_CLOCK_DOMAIN" value="-1" />
-  <parameter name="AUTO_CLK_CLOCK_RATE" value="-1" />
-  <parameter name="AUTO_CLK_RESET_DOMAIN" value="-1" />
-  <parameter name="AUTO_CLOCK_CLOCK_DOMAIN" value="3" />
+  <parameter name="AUTO_CLOCK_CLOCK_DOMAIN" value="4" />
   <parameter name="AUTO_CLOCK_CLOCK_RATE" value="50000000" />
-  <parameter name="AUTO_CLOCK_RESET_DOMAIN" value="3" />
+  <parameter name="AUTO_CLOCK_RESET_DOMAIN" value="4" />
   <parameter name="AUTO_DEVICE" value="5CSEMA5F31C6" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="6" />
   <parameter name="AUTO_GENERATION_ID" value="0" />
   <parameter name="AUTO_MASTER_ADDRESS_MAP"><![CDATA[<address-map><slave name='hps_0_bridges.f2h_sdram0_data' start='0x0' end='0x100000000' /></address-map>]]></parameter>
   <parameter name="AUTO_MASTER_ADDRESS_WIDTH" value="AddressWidth = 32" />
-  <parameter name="AUTO_SC_FIFO_0_CLK_CLOCK_DOMAIN" value="-1" />
-  <parameter name="AUTO_SC_FIFO_0_CLK_CLOCK_RATE" value="-1" />
-  <parameter name="AUTO_SC_FIFO_0_CLK_RESET_DOMAIN" value="-1" />
-  <parameter name="AUTO_STREAM_TO_MEMORY_0_CLOCK_CLOCK_DOMAIN" value="-1" />
-  <parameter name="AUTO_STREAM_TO_MEMORY_0_CLOCK_CLOCK_RATE" value="-1" />
-  <parameter name="AUTO_STREAM_TO_MEMORY_0_CLOCK_RESET_DOMAIN" value="-1" />
-  <parameter name="AUTO_STREAM_TO_MEMORY_0_MASTER_ADDRESS_MAP" value="" />
-  <parameter
-     name="AUTO_STREAM_TO_MEMORY_0_MASTER_ADDRESS_WIDTH"
-     value="AddressWidth = -1" />
-  <parameter name="AUTO_UNIQUE_ID">soc_system_fpgacha_0</parameter>
+  <parameter name="AUTO_UNIQUE_ID">$${FILENAME}_fpgacha_0</parameter>
  </module>
  <module name="fpgacha_1" kind="fpgacha" version="1.0" enabled="1">
-  <parameter name="AUTO_CLOCK_CLOCK_DOMAIN" value="3" />
+  <parameter name="AUTO_CLOCK_CLOCK_DOMAIN" value="4" />
   <parameter name="AUTO_CLOCK_CLOCK_RATE" value="50000000" />
-  <parameter name="AUTO_CLOCK_RESET_DOMAIN" value="3" />
+  <parameter name="AUTO_CLOCK_RESET_DOMAIN" value="4" />
   <parameter name="AUTO_DEVICE" value="5CSEMA5F31C6" />
   <parameter name="AUTO_DEVICE_FAMILY" value="Cyclone V" />
   <parameter name="AUTO_DEVICE_SPEEDGRADE" value="6" />
   <parameter name="AUTO_GENERATION_ID" value="0" />
   <parameter name="AUTO_MASTER_ADDRESS_MAP"><![CDATA[<address-map><slave name='hps_0_bridges.f2h_sdram0_data' start='0x0' end='0x100000000' /></address-map>]]></parameter>
   <parameter name="AUTO_MASTER_ADDRESS_WIDTH" value="AddressWidth = 32" />
-  <parameter name="AUTO_UNIQUE_ID">soc_system_fpgacha_1</parameter>
+  <parameter name="AUTO_UNIQUE_ID">$${FILENAME}_fpgacha_1</parameter>
  </module>
  <module name="hps_0" kind="altera_hps" version="18.1" enabled="1">
   <parameter name="ABSTRACT_REAL_COMPARE_TEST" value="false" />
