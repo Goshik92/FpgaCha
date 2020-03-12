@@ -1,0 +1,36 @@
+/dts-v1/;/plugin/;
+/ {
+
+    fragment@0 {
+        target-path = "/soc/fpga-region0";
+        __overlay__ {
+            firmware-name = "fpgacha.rbf";
+        };
+    };
+    fragment@1 {
+        target-path = "/soc/amba";
+        __overlay__ {
+            #address-cells = <0x1>;
+            #size-cells = <0x1>;
+            
+            fpgacha_0_chacha20: chacha20@ff200400 {
+                compatible = "goshik92,chacha20-1.0", "generic-uio";
+                reg = <0xff200400 0x0100>;
+            };
+
+            fpgacha_0_s2m_adapter: s2m_adapter@ff200500 {
+                compatible = "goshik92,s2m_adapter-1.0", "generic-uio";
+                reg = <0xff200500 0x0010>;
+                interrupt-parent = <&intc>;
+                interrupts = <0 40 4>;
+            };
+            
+            fpgacha-udmabuf {
+                compatible  = "ikwzm,udmabuf-0.10.a";
+                device-name = "udmabuf";
+                size = <0x00400000>;
+            };
+        };
+    };
+};
+

@@ -1,5 +1,0 @@
-<BoardInfo>
-    <Chosen>
-        <Bootargs val="debug console=ttyAL0,115200 uio_pdrv_genirq.of_id=uio-pdrv-genirq uio_dmem_genirq.of_id=uio-dmem-genirq"></Bootargs>
-    </Chosen>
-</BoardInfo>

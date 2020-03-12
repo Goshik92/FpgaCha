@@ -9,14 +9,18 @@
 # (without this we cannot whitelist files)
 !/**/
 
+# db dir contains garbage
+/db/
+
 # Include source files
-!/*/*.sv
-!/*/*.v
-!/*/*.vhd
+!/**/*.sv
+!/**/*.v
+!/**/*.vhd
 
 # Include project files
-!/*/*.qsf
-!/*/*.qpf
+!/**/*.qsf
+!/**/*.qpf
+!/**/*.sdc
 
 # Include gitignore
 !.gitignore

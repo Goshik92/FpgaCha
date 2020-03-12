@@ -9,12 +9,8 @@
 # (without this we cannot whitelist files)
 !/**/
 
-# Include XML files
-# They are needed for additional config
-!/**/*.xml
-
-# Include scripts
-!/**/*.sh
+# Include device-tree sources
+!/**/*.dts
 
 # Include gitignore
 !.gitignore
