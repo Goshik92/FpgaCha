@@ -26,15 +26,20 @@
    {
       datum _sortIndex
       {
-         value = "4";
+         value = "3";
          type = "int";
       }
    }
    element fpgacha_0.csr
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
-         value = "1024";
+         value = "0";
          type = "String";
       }
    }
@@ -42,15 +47,20 @@
    {
       datum _sortIndex
       {
-         value = "5";
+         value = "4";
          type = "int";
       }
    }
    element fpgacha_1.csr
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
-         value = "3072";
+         value = "4096";
          type = "String";
       }
    }
@@ -58,15 +68,20 @@
    {
       datum _sortIndex
       {
-         value = "6";
+         value = "5";
          type = "int";
       }
    }
    element fpgacha_2.csr
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
-         value = "2048";
+         value = "8192";
          type = "String";
       }
    }
@@ -74,15 +89,20 @@
    {
       datum _sortIndex
       {
-         value = "7";
+         value = "6";
          type = "int";
       }
    }
    element fpgacha_3.csr
    {
+      datum _lockedAddress
+      {
+         value = "1";
+         type = "boolean";
+      }
       datum baseAddress
       {
-         value = "0";
+         value = "12288";
          type = "String";
       }
    }
@@ -121,32 +141,6 @@
       {
          value = "1";
          type = "int";
-      }
-   }
-   element sysid_qsys
-   {
-      datum _sortIndex
-      {
-         value = "3";
-         type = "int";
-      }
-      datum sopceditor_expanded
-      {
-         value = "1";
-         type = "boolean";
-      }
-   }
-   element sysid_qsys.control_slave
-   {
-      datum _lockedAddress
-      {
-         value = "1";
-         type = "boolean";
-      }
-      datum baseAddress
-      {
-         value = "4096";
-         type = "String";
       }
    }
 }
@@ -987,18 +981,11 @@
   <parameter name="gui_switchover_mode">Automatic Switchover</parameter>
   <parameter name="gui_use_locked" value="false" />
  </module>
- <module
-   name="sysid_qsys"
-   kind="altera_avalon_sysid_qsys"
-   version="18.1"
-   enabled="1">
-  <parameter name="id" value="-1395322110" />
- </module>
  <connection
    kind="avalon"
    version="18.1"
    start="hps_0.h2f_lw_axi_master"
-   end="sysid_qsys.control_slave">
+   end="fpgacha_1.csr">
   <parameter name="arbitrationPriority" value="1" />
   <parameter name="baseAddress" value="0x1000" />
   <parameter name="defaultConnection" value="false" />
@@ -1007,18 +994,9 @@
    kind="avalon"
    version="18.1"
    start="hps_0.h2f_lw_axi_master"
-   end="fpgacha_1.csr">
-  <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0c00" />
-  <parameter name="defaultConnection" value="false" />
- </connection>
- <connection
-   kind="avalon"
-   version="18.1"
-   start="hps_0.h2f_lw_axi_master"
    end="fpgacha_2.csr">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0800" />
+  <parameter name="baseAddress" value="0x2000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -1027,7 +1005,7 @@
    start="hps_0.h2f_lw_axi_master"
    end="fpgacha_3.csr">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0000" />
+  <parameter name="baseAddress" value="0x3000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -1036,7 +1014,7 @@
    start="hps_0.h2f_lw_axi_master"
    end="fpgacha_0.csr">
   <parameter name="arbitrationPriority" value="1" />
-  <parameter name="baseAddress" value="0x0400" />
+  <parameter name="baseAddress" value="0x0000" />
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection
@@ -1076,11 +1054,6 @@
   <parameter name="defaultConnection" value="false" />
  </connection>
  <connection kind="clock" version="18.1" start="clk_0.clk" end="pll_0.refclk" />
- <connection
-   kind="clock"
-   version="18.1"
-   start="pll_0.outclk0"
-   end="sysid_qsys.clk" />
  <connection
    kind="clock"
    version="18.1"
@@ -1149,11 +1122,6 @@
    end="fpgacha_3.irq">
   <parameter name="irqNumber" value="3" />
  </connection>
- <connection
-   kind="reset"
-   version="18.1"
-   start="clk_0.clk_reset"
-   end="sysid_qsys.reset" />
  <connection kind="reset" version="18.1" start="clk_0.clk_reset" end="pll_0.reset" />
  <connection
    kind="reset"

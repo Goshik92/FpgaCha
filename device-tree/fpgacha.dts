@@ -13,21 +13,37 @@
             #address-cells = <0x1>;
             #size-cells = <0x1>;
             
-            fpgacha_0_chacha20: chacha20@ff200400 {
-                compatible = "goshik92,chacha20-1.0", "generic-uio";
-                reg = <0xff200400 0x0100>;
-            };
-
-            fpgacha_0_s2m_adapter: s2m_adapter@ff200500 {
-                compatible = "goshik92,s2m_adapter-1.0", "generic-uio";
-                reg = <0xff200500 0x0010>;
+            fpgacha0: fpgacha@ff200000 {
+                compatible = "generic-uio";
+                reg = <0xff200000 0x1000>;
                 interrupt-parent = <&intc>;
                 interrupts = <0 40 4>;
             };
+
+            fpgacha1: fpgacha@ff201000 {
+                compatible = "generic-uio";
+                reg = <0xff201000 0x1000>;
+                interrupt-parent = <&intc>;
+                interrupts = <0 41 4>;
+            };
             
-            fpgacha-udmabuf {
-                compatible  = "ikwzm,udmabuf-0.10.a";
-                device-name = "udmabuf";
+            fpgacha2: fpgacha@ff202000 {
+                compatible = "generic-uio";
+                reg = <0xff202000 0x1000>;
+                interrupt-parent = <&intc>;
+                interrupts = <0 42 4>;
+            };
+            
+            fpgacha3: fpgacha@ff203000 {
+                compatible = "generic-uio";
+                reg = <0xff203000 0x1000>;
+                interrupt-parent = <&intc>;
+                interrupts = <0 43 4>;
+            };
+            
+            fpgachabuf {
+                compatible = "ikwzm,udmabuf-0.10.a";
+                device-name = "udmabuf0";
                 size = <0x00400000>;
             };
         };
