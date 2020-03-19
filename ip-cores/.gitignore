@@ -15,5 +15,10 @@
 !/**/*.v
 !/**/*.vhd
 
+# Allow Quartus projects
+# Useful for testing synthesizability
+!/**/*.qpf
+!/**/*.qsf
+
 # Include gitignore
 !.gitignore

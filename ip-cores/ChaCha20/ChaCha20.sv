@@ -153,13 +153,13 @@ module ChaCha20(
             // Avalon write operation
             if (csr_write) casez(csr_address)
                 // Fill initial state
-                6'b00????: begin
+                5'b0????: begin
                     initState[csr_address[3:0]] <= csr_writedata;
                     ResetRound();
                 end
                 
                 // If CONTROL register is written, first computation
-                6'b100000: begin
+                5'b10000: begin
                     padCounter <= csr_writedata[4:0];
                     FirstRound();
                 end
