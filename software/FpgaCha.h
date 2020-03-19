@@ -1,71 +1,65 @@
-/***********************************************
-* Author: Igor Semenov (is0031@uah.edu)
-* Platform: Terasic DE2-115
-* Date: Dec 2019
-***********************************************/
+#pragma once
 
 #include <stdbool.h>
 #include <stdint.h>
-#include <algorithm>
-#include <iterator>
-
-#pragma once
+#include <stdlib.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+#include <stdexcept>
+#include "LinuxDevice.h"
+#include "ChaCha20Map.h"
+#include "StToMemMap.h"
 
 namespace FpgaCha
 {
-    typedef uint32_t State[16];
-    typedef uint32_t Key[8];
-    typedef uint32_t Nonce[3];
-
-    struct __attribute__((packed)) Dev
+    class FpgaCha
     {
     private:
-        volatile State InitState;
-        volatile State FinalState;
-        volatile uint32_t Control;
-    
+        const uint32_t CHACHA20_OFF = 0x0000;
+        const uint32_t ST2MEM_OFF = 0x0100;
+        const LinuxDevice device;
+
     public:
-        void SetConstants() volatile
+        ChaCha20Map* const chacha20;
+        StToMemMap* const stToMem;
+        
+        FpgaCha(const std::string& name) : 
+                device(LinuxDevice(name, "uio", "maps/map0/size")),
+                chacha20((ChaCha20Map*)((uint8_t*)device.mapping + CHACHA20_OFF)),
+                stToMem((StToMemMap*)((uint8_t*)device.mapping + ST2MEM_OFF)) { }
+        
+        void enableIrq() const
         {
-            InitState[0] = 0x61707865;
-            InitState[1] = 0x3320646e;
-            InitState[2] = 0x79622d32;
-            InitState[3] = 0x6b206574;
+            // We need to write 1 to UIO file to enable interrupts
+            uint32_t one = 1;
+            
+            // Try to write 1
+            const ssize_t length = write(device.descriptor, &one, sizeof(one));
+            
+            // If write did not work
+            if (length != (ssize_t)sizeof(one))
+            {
+                std::string m = "Error when enabling interrupts for '";
+                throw std::runtime_error(m + device.name + "': " + strerror(errno));
+            }
         }
         
-        void SetKey(Key key) volatile
+        void waitForIrq() const
         {
-            for(int i = 0; i < 8; i++) 
-                InitState[i + 4] = key[i];
-        }
-        
-        void SetBlockCount(uint32_t blockCount) volatile
-        {
-            InitState[12] = blockCount;
-        }
-        
-        void SetNonce(Nonce nonce) volatile
-        {
-            InitState[13] = nonce[0];
-            InitState[14] = nonce[1];
-            InitState[15] = nonce[2];
-        }
-        
-        void Start() volatile
-        {
-            Control = 10;
-        }
-        
-        bool Busy() volatile
-        {
-            return Control != 0;
-        }
-        
-        void CopyState(State& state) volatile
-        {
-            // memcpy discards volatile quantifier,
-            // so I had to use a loop;
-            for(int i = 0; i < 16; i++) state[i] = FinalState[i];
+            uint32_t result;
+            
+            // Wait for interrupt by reading from UIO device file
+            const ssize_t length = read(device.descriptor, &result, sizeof(result));
+            
+            // If an error happened
+            if (length != (ssize_t)sizeof(result))
+            {
+                std::string m = "Error when waiting for interrupt from '";                
+                throw std::runtime_error(m + device.name + "': " + strerror(errno));
+            } 
         }
     };
 }
