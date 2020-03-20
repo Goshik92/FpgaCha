@@ -8,15 +8,16 @@
 *     Using Avalon-MM interface
 ***********************************************/
 
-localparam logic [4:0] ROUND_COUNT = 5'd20;
-localparam StateIdx_t BCOUNT_IDX = StateIdx_t'(12);
-
 // Data structures used in the module
 typedef logic [31:0] Word_t;
 typedef Word_t QState_t[4];
 typedef Word_t State_t[16];
 typedef logic [3:0] StateIdx_t;
 typedef logic [$bits(State_t)-1:0] RawState_t;
+typedef logic [4:0] RoundCounter_t;
+
+localparam RoundCounter_t MAX_ROUND_COUNT = 5'd19;
+localparam StateIdx_t BCOUNT_IDX = StateIdx_t'(12);
 
 // Rotates a word to the left by n positions
 function automatic Word_t RotLeft(Word_t in, logic [4:0] n);
@@ -74,9 +75,9 @@ module ChaCha20(
     // Avalon-MM slave interface for configuring the module
     input logic csr_write,
     input logic csr_read,
-    input logic [5:0] csr_address,
-    input logic [31:0] csr_writedata,
-    output logic [31:0] csr_readdata,
+    input logic [4:0] csr_address,
+    input Word_t csr_writedata,
+    output Word_t csr_readdata,
     
     // Avalon-ST source interface for outputting the data
     output logic [511:0] st_data,
@@ -85,19 +86,16 @@ module ChaCha20(
 );
 
     // Round being computed currently
-    logic [4:0] roundCounter;
+    RoundCounter_t roundCounter;
     
     // OTP being computed currently
-    logic [4:0] padCounter;
+    Word_t padCounter;
     
     // ChaCha20 states
     State_t initState, state;
     
     // not actually a register and is used in a MUX
     State_t roundSrc, roundResult;
-    
-    // Assign random constant to probe the module 
-    assign csr_readdata = 32'hfb7e03d9; 
     
     // Choose source for a round (init state or current state)
     assign roundSrc = roundCounter == 1'b0 ? initState : state;
@@ -119,7 +117,7 @@ module ChaCha20(
     //
     task FirstRound();
         // Set round counter to the top value
-        roundCounter <= ROUND_COUNT - 1'b1;
+        roundCounter <= MAX_ROUND_COUNT;
         
         // Save first round output
         state <= roundResult;
@@ -150,6 +148,15 @@ module ChaCha20(
         
         // Non-reset logic
         else begin
+            // Avalon read operation
+            if (csr_read) casez(csr_address)
+                5'b0????: csr_readdata <= initState[csr_address[3:0]];
+                5'b10000: csr_readdata <= padCounter;
+                5'b10001: csr_readdata <= roundCounter;
+                // random constant to probe the module 
+                default: csr_readdata <= 32'hfb7e03d9; 
+            endcase
+        
             // Avalon write operation
             if (csr_write) casez(csr_address)
                 // Fill initial state
@@ -158,10 +165,10 @@ module ChaCha20(
                     ResetRound();
                 end
                 
-                // If CONTROL register is written, first computation
+                // If padCounter register is written, do first round
                 5'b10000: begin
-                    padCounter <= csr_writedata[4:0];
-                    FirstRound();
+                    padCounter <= csr_writedata;
+                    if (csr_writedata != 1'b0) FirstRound();
                 end
             endcase
 
@@ -174,12 +181,16 @@ module ChaCha20(
                 else begin
                     // Continue only if the the stream sink can accept data.
                     // Otherwise stall (roundCounter does not change)
-                    if (st_ready && padCounter != 1'b0) begin
-                        // One more pad has been computed
-                        padCounter <= padCounter - 1'b1;
+                    if (st_ready) begin
+                        if (padCounter != 1'b0) begin
+                            // One more pad has been computed
+                            padCounter <= padCounter - 1'b1;
+                            
+                            // Start new pad computation
+                            FirstRound();
+                        end
                         
-                        // Start new pad computation
-                        FirstRound();
+                        else ResetRound();
                     end
                 end
             end
