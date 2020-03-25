@@ -1,13 +1,3 @@
-/***********************************************
-* Author: Igor Semenov (is0031@uah.edu)
-* Platform: Terasic DE2-115
-* Date: Dec 2019
-* Description:
-*     The module implements a ChaCha20 algorithm.
-*     It can be connected to Nios II or ARM processor
-*     Using Avalon-MM interface
-***********************************************/
-
 // Data structures used in the module
 typedef logic [31:0] Word_t;
 typedef Word_t QState_t[4];
@@ -88,63 +78,29 @@ module ChaCha20(
     // Round being computed currently
     RoundCounter_t roundCounter;
     
-    // OTP being computed currently
+    // Number of OTP being computed currently
     Word_t padCounter;
     
     // ChaCha20 states
     State_t initState, state;
     
     // not actually a register and is used in a MUX
-    State_t roundSrc, roundResult;
-    
-    // Choose source for a round (init state or current state)
-    assign roundSrc = roundCounter == 1'b0 ? initState : state;
-                
+    State_t roundResult;
+          
     // Get round result
     // roundCounter[0] is used to choose even or odd round function
-    assign roundResult = roundCounter[0] ? OddRound(roundSrc) : EvenRound(roundSrc);
+    assign roundResult = roundCounter[0] ? OddRound(state) : EvenRound(state);
     
-    //
+    // Connect out data directly to the state
     assign st_data = ToRawState(state);
-
-    //
-    task ResetRound();
-        padCounter <= 1'b0;
-        roundCounter <= 1'b0;
-        st_valid <= 1'b0;
-    endtask
-    
-    //
-    task FirstRound();
-        // Set round counter to the top value
-        roundCounter <= MAX_ROUND_COUNT;
-        
-        // Save first round output
-        state <= roundResult;
-        
-        // Increment block count to compute next pad
-        // Has no effect for the current pad
-        initState[BCOUNT_IDX] <= initState[BCOUNT_IDX] + 1'b1;
-        
-        //
-        st_valid <= 1'b0;
-    endtask
-    
-    //
-    task NextRound();
-        // One more round has been processed
-        roundCounter <= roundCounter - 1'b1;
-                    
-        // Save current round output
-        state <= roundResult;
-        
-        //
-        st_valid <= roundCounter == 1'b1;
-    endtask
 
     always_ff @(posedge clock) begin
         // Reset logic
-        if (reset) ResetRound();
+        if (reset) begin
+            st_valid <= 1'b0;
+            roundCounter <= 1'b0;
+            padCounter <= 1'b0;
+        end
         
         // Non-reset logic
         else begin
@@ -159,41 +115,60 @@ module ChaCha20(
         
             // Avalon write operation
             if (csr_write) casez(csr_address)
-                // Fill initial state
+                // Words of initial state
                 5'b0????: begin
                     initState[csr_address[3:0]] <= csr_writedata;
-                    ResetRound();
                 end
                 
-                // If padCounter register is written, do first round
+                // If padCounter register is written
                 5'b10000: begin
                     padCounter <= csr_writedata;
-                    if (csr_writedata != 1'b0) FirstRound();
+                    roundCounter <= 1'b0;
+                    state <= initState;
                 end
             endcase
 
-            // No write operations from Avalon
-            else begin            
-                // Do next round
-                if (roundCounter != 1'b0) NextRound();
-                
-                // Last round logic
-                else begin
-                    // Continue only if the the stream sink can accept data.
-                    // Otherwise stall (roundCounter does not change)
-                    if (st_ready) begin
-                        if (padCounter != 1'b0) begin
-                            // One more pad has been computed
-                            padCounter <= padCounter - 1'b1;
-                            
-                            // Start new pad computation
-                            FirstRound();
-                        end
+            // If there is work to do
+            else if (padCounter != 1'b0) begin  
+                // If we can change output data
+                if (st_ready || !st_valid) begin
+                    // Save round result
+                    state <= roundResult;
+                    
+                    // First round logic
+                    if (roundCounter == 1'b0) begin
+                        // One more round has been processed
+                        roundCounter <= roundCounter + 1'b1;
+
+                        // Increment block count to compute next pad
+                        // Has no effect on the current pad
+                        initState[BCOUNT_IDX] <= initState[BCOUNT_IDX] + 1'b1;
                         
-                        else ResetRound();
+                        // Output data is invalid now
+                        st_valid <= 1'b0;
+                    end
+                    
+                    // Regular round logic
+                    else if (roundCounter != MAX_ROUND_COUNT) begin
+                        // One more round has been processed
+                        roundCounter <= roundCounter + 1'b1;
+                    end
+                    
+                    // Last round logic
+                    else begin
+                        // Start new pad computation
+                        roundCounter <= 1'b0;
+                        
+                        // One more pad has been computed
+                        padCounter <= padCounter - 1'b1;
+                        
+                        // Output data is valid now
+                        st_valid <= 1'b1;
                     end
                 end
             end
+            
+            else if (st_ready) st_valid <= 1'b0;
         end
     end
 endmodule
