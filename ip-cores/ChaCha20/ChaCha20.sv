@@ -85,11 +85,14 @@ module ChaCha20(
     State_t initState, state;
     
     // not actually a register and is used in a MUX
-    State_t roundResult;
-          
+    State_t roundResult, stateSrc;
+        
+    //
+    assign stateSrc = roundCounter == 1'b0 ? initState : state;
+         
     // Get round result
     // roundCounter[0] is used to choose even or odd round function
-    assign roundResult = roundCounter[0] ? OddRound(state) : EvenRound(state);
+    assign roundResult = roundCounter[0] ? OddRound(stateSrc) : EvenRound(stateSrc);
     
     // Connect out data directly to the state
     assign st_data = ToRawState(state);
@@ -124,7 +127,6 @@ module ChaCha20(
                 5'b10000: begin
                     padCounter <= csr_writedata;
                     roundCounter <= 1'b0;
-                    state <= initState;
                 end
             endcase
 
