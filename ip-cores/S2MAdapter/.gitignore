@@ -15,6 +15,7 @@
 # Include project files
 !/*.qsf
 !/*.qpf
+!/*_hw.tcl
 
 # Include gitignore
 !.gitignore
