@@ -44,7 +44,7 @@
             fpgachabuf {
                 compatible = "ikwzm,udmabuf-0.10.a";
                 device-name = "udmabuf0";
-                size = <0x00400000>;
+                size = <0x00A00000>;
             };
         };
     };
