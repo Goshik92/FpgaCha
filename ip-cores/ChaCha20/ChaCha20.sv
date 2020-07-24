@@ -1,3 +1,20 @@
+/*******************************************************************************
+ * Copyright 2020 Igor Semenov (goshik92@gmail.com)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *******************************************************************************/
+
 // Data structures used in the module
 typedef logic [31:0] Word_t;
 typedef Word_t QState_t[4];
@@ -14,7 +31,7 @@ function automatic Word_t RotLeft(Word_t in, logic [4:0] n);
     RotLeft = in << n | in >> (~n + 1'b1); 
 endfunction
 
-// 
+// Converts a word array into a bit array
 function automatic RawState_t ToRawState(State_t s);
     for(int i = 0; i < $size(State_t); i++) begin
         ToRawState[i * $bits(Word_t) +: $bits(Word_t)] = s[i];
