@@ -75,7 +75,7 @@ Workers and the Cryptor communicate via tasks: Cryptor decides which part of one
 DE10-Nano board is capable of running Linux on its ARM processor, and FpgaCha can be used in this Linux environment. I used [this](https://github.com/ikwzm/FPGA-SoC-Linux) Debian distribution as the basis for my experiments with FpgaCha. However, I modified it slightly to automatically enable the FPGA-to-SDRAM bridge in U-Boot (see [this gist](https://gist.github.com/Goshik92/68af8ee64a3fa469d81017385a814cad) for more detail).
 
 Download [this](
-https://drive.google.com/file/d/1k0qxvy9RfGG8k0pqKzSqvhWvKfCM8nFA) archive, unpack it, and write it to a 16 GB SD card (you can use [Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/) in Windows). Insert the card in your DE10-Nano board and turn on the power. Connect the board to your local network using an Ethernet-cable. The network in this Linux image is configured to work with DHCP. Use your router's admin panel to find out the boards IP address (look for `debian-fpga` hostname). Use the following credentials to connect to the board via SSH:
+https://drive.google.com/file/d/1FOtU0h1WMCdLZbvvmm-nCn4tRDj-lYKO/view) archive, unpack it, and write the `.img` file to a 16 GB SD card (you can use [Win32 Disk Imager](https://sourceforge.net/projects/win32diskimager/) in Windows). Insert the card in your DE10-Nano board and turn on the power. Connect the board to your local network using an Ethernet-cable. The network in this Linux image is configured to work with DHCP. Use your router's admin panel to find out the boards IP address (look for `debian-fpga` hostname). Use the following credentials to connect to the board via SSH:
 
 * login: `root`
 * password: `admin`
