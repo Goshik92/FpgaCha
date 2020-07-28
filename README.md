@@ -35,7 +35,9 @@ The diagram of the hardware system containing multiple FphaCha cores is shown be
 
 ![](https://user-images.githubusercontent.com/4264235/88441542-042de200-cdd7-11ea-97bf-4851e0cef21a.png)
 
-The HPS (the system containing ARM cores) configures ChaCha20 accelerator and S2M adapter via the lightweight HPS-to-DRAM bridge. Once configured ChaCha20 accelerator starts producing blocks of ChaCha20 one-time pad and placing them in the FIFO. S2M adapter reads these blocks and transfers them in DRAM through the FPGA-to-SDRAM bridge. Once all requested blocks are transferred, S2M adapter sends an interrupt request to the HPS, signalizing about finishing the job. 
+The HPS (the system containing ARM cores) configures ChaCha20 accelerator and S2M adapter via the lightweight HPS-to-DRAM bridge. Once configured ChaCha20 accelerator starts producing blocks of ChaCha20 one-time pad and placing them in the FIFO. S2M adapter reads these blocks and transfers them in DRAM through the FPGA-to-SDRAM bridge. Once all requested blocks are transferred, S2M adapter sends an interrupt request to the HPS, signalizing about finishing the job.
+
+More info about the design of FpgaCha is available in my [thesis](http://www.ece.uah.edu/~milenka/docs/igor.semenov.thesis.pdf).
 
 ## Register map
 
@@ -67,6 +69,8 @@ Workers are ChaCha20 [one-time pad](https://en.wikipedia.org/wiki/One-time_pad) 
 Cryptor is a one-time pad consumer. Based on its type, it can either use the one-time pad to encrypt a file, or can just discard it (useful for performance measurements).
 
 Workers and the Cryptor communicate via tasks: Cryptor decides which part of one-time pad it needs and asks for this part by placing a certain task in the queue of scheduled tasks. Workers extract the tasks from the queue, generate the necessary blocks of one-time pad accordingly, and place the result in the queue of finished tasks, which puts the results in order (workers may process tasks at different rates, so the results may be un-ordered). Cryptor consumes the results from that queue and performs file encryption.  
+
+More info about the architecture of `chacha20` utility is available in my [thesis](http://www.ece.uah.edu/~milenka/docs/igor.semenov.thesis.pdf).
 
 # Running the project
 
